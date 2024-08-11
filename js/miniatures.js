@@ -12,7 +12,7 @@ const drawPhotos = (photoGallery) => {
     photoElement.querySelector('.picture__img').alt = description;
     photoElement.querySelector('.picture__comments').textContent = comments.length;
     photoElement.querySelector('.picture__likes').textContent = likes;
-    listPhotos.appendChild(photoElement);
+    listFragment.appendChild(photoElement);
   });
   listPhotos.appendChild(listFragment);
   filtersForTheUser.classList.remove('img-filters--inactive');

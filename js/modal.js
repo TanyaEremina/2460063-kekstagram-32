@@ -7,12 +7,12 @@ const fullImage = document.querySelector('.big-picture');
 const bodyScroll = document.querySelector('body');
 const fullImageUrl = fullImage.querySelector('.big-picture__img');
 const showMoreButton = fullImage.querySelector('.social__comments-loader');
+const INITIAL_QUANTITY_COMMENTS = 5;
 
 let picturesData = [];
 
 const setPicturesData = (data) => {
   const miniatures = document.querySelectorAll('.picture');
-  const INITIAL_QUANTITY_COMMENTS = 5;
   const commentsList = document.querySelectorAll('.social__comment');
 
   picturesData = data;
@@ -74,13 +74,19 @@ const closeUserModal = () => {
   }
 };
 
-buttonCancel.addEventListener('click', closeUserModal);
-
-document.addEventListener('keydown', (evt) => {
+const onDocumentKeydown = (evt) => {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     closeUserModal();
   }
+};
+
+
+buttonCancel.addEventListener('click', () => {
+  closeUserModal();
 });
 
+document.addEventListener('keydown', onDocumentKeydown);
+
 export {setPicturesData};
+

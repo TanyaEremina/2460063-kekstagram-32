@@ -1,6 +1,6 @@
 import {sendData} from './api.js';
-import {createAFortune, createAPublishingError} from './message.js';
-import {getEffectId} from './util.js';
+import {showAFortune, showAPublishingError} from './message.js';
+import {setListenerEffects} from './util.js';
 import './form-scale.js';
 
 const MAX_COUNT_HASHTAGS = 5;
@@ -26,13 +26,14 @@ const buttonCancel = document.querySelector('.img-upload__cancel');
 const fieldHashags = document.querySelector('.text__hashtags');
 const fieldDescription = document.querySelector('.text__description');
 const effects = document.querySelectorAll('.effects__item');
-const submitButton = document.querySelectorAll('.img-upload__submit');
+const submitButton = document.querySelector('.img-upload__submit');
+const filter = document.querySelector('.img-upload__effect-level');
 
-const openForm = () => {
+const onUploadImageClick = () => {
   overlay.classList.remove('hidden');
   bodyScroll.classList.add('modal-open');
-  document.querySelector('.img-upload__effect-level').classList.add('hidden');
-  getEffectId(effects);
+  filter.classList.add('hidden');
+  setListenerEffects(effects);
 
 };
 
@@ -44,7 +45,8 @@ const pristine = new Pristine(formSubmit, {
 
 const convertStringToArray = (stringTags) => {
   const arrayTags = stringTags.trim().toLowerCase().split(' ');
-  return arrayTags;
+  const filteredTags = arrayTags.filter((tag) => tag !== '');
+  return filteredTags;
 };
 
 const checkingTagsForQuantity = (value) => {
@@ -72,21 +74,20 @@ pristine.addValidator(fieldDescription, checkMessageLength, errorText.STRING_DES
 
 const hasFocusField = () => document.activeElement === fieldDescription || document.activeElement === fieldHashags;
 
-const pressAKey = (evt) => {
-  if (evt.key === 'Escape' && !hasFocusField()){
+const onWindowKeydown = (evt) => {
+  if (evt.key === 'Escape' && !hasFocusField() && !document.body.contains(document.querySelector('.error'))){
     evt.preventDefault();
-    closeForm();
+    onFormClose();
   }else{
     evt.stopPropagation();
   }
 };
 
-function closeForm () {
+function onFormClose () {
   overlay.classList.add('hidden');
   bodyScroll.classList.remove('modal-open');
   formSubmit.reset();
   pristine.reset();
-  document.removeEventListener('keydown', pressAKey);
 }
 
 const blockSubmitButton = () => {
@@ -106,19 +107,18 @@ const setUserFormSubmit = () => {
     if (isValid) {
       blockSubmitButton();
       sendData(new FormData(evt.target))
-        .then(closeForm)
-        .then(createAFortune)
+        .then(onFormClose)
+        .then(showAFortune)
         .catch((err) => {
-          createAPublishingError(err.message);
+          showAPublishingError(err.message);
         })
         .finally(unblockSubmitButton);
     }
   });
 };
 
-uploadField.addEventListener('change', openForm);
-buttonCancel.addEventListener('click', closeForm);
-document.addEventListener('keydown', pressAKey);
-
+uploadField.addEventListener('change', onUploadImageClick);
+buttonCancel.addEventListener('click', onFormClose);
+document.addEventListener('keydown', onWindowKeydown);
 
 export{setUserFormSubmit};

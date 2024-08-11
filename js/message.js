@@ -2,24 +2,7 @@ const receivingErrorTemplate = document.querySelector('#data-error').content.que
 const successfulState = document.querySelector('#success').content.querySelector('.success');
 const errorfulState = document.querySelector('#error').content.querySelector('.error');
 
-const closeMessage = (button, message) => {
-  button.addEventListener('click', () => {
-    message.remove();
-  });
-  document.addEventListener('click',(evt) =>{
-    const event = evt.target;
-    if(message === event){
-      message.remove();
-    }
-  });
-  document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      message.remove();
-    }
-  });
-};
-const createAnErrorUponReceipt = () => {
+const showAnErrorUponReceipt = () => {
   const receivingErrorElement = receivingErrorTemplate.cloneNode(true);
   document.body.append(receivingErrorElement);
   setTimeout(() => {
@@ -27,18 +10,44 @@ const createAnErrorUponReceipt = () => {
   }, 5000);
 };
 
-const createAFortune = () => {
+const onDocumentCheckClick = (evt) => {
+  const element = evt.target;
+  if (element === document.querySelector('.error') || element === document.querySelector('.success')){
+    onButtonCloseClick();
+  }
+};
+
+const onDocumentKeydown = (evt) => {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    onButtonCloseClick();
+  }
+};
+
+function onButtonCloseClick () {
+  const message = document.querySelector('.error') || document.querySelector('.success');
+  message.remove();
+  document.removeEventListener('keydown',onDocumentKeydown);
+}
+
+const showAFortune = () => {
   const successfulStateElement = successfulState.cloneNode(true);
   document.body.append(successfulStateElement);
-  const successButton = successfulStateElement.querySelector('.success__button');
-  closeMessage(successButton, successfulStateElement);
+  const button = successfulStateElement.querySelector('.success__button');
+
+  button.addEventListener('click', onButtonCloseClick);
+  document.querySelector('.success').addEventListener('click', onDocumentCheckClick);
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
-const createAPublishingError = () => {
+const showAPublishingError = () => {
   const errorfulStateElement = errorfulState.cloneNode(true);
   document.body.append(errorfulStateElement);
-  const errorButton = errorfulStateElement.querySelector('.error__button');
-  closeMessage(errorButton, errorfulStateElement);
+  const button = errorfulStateElement.querySelector('.error__button');
+
+  button.addEventListener('click', onButtonCloseClick);
+  document.querySelector('.error').addEventListener('click', onDocumentCheckClick);
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
-export {createAnErrorUponReceipt, createAFortune, createAPublishingError};
+export {showAnErrorUponReceipt, showAFortune, showAPublishingError};
