@@ -1,6 +1,6 @@
-const sliderElement = document.querySelector('.effect-level__slider');
-const effects = document.querySelectorAll('.effects__item');
+const slider = document.querySelector('.effect-level__slider');
 const image = document.querySelector('.img-upload__preview img');
+const fieldValue = document.querySelector('.effect-level__value');
 
 const SliderSettings = {
   CHROME: { range: { 'min': 0, 'max': 1 }, step: 0.1, start: 1 },
@@ -12,7 +12,7 @@ const SliderSettings = {
 };
 
 
-noUiSlider.create(sliderElement, {
+noUiSlider.create(slider, {
   range: {
     min: 0,
     max: 1,
@@ -24,7 +24,7 @@ noUiSlider.create(sliderElement, {
 
 const updateSlider = (effect) =>{
   const {range: {min, max}, step, start} = effect;
-  sliderElement.noUiSlider.updateOptions({
+  slider.noUiSlider.updateOptions({
     range: {min, max},
     start: start,
     step: step,
@@ -32,56 +32,58 @@ const updateSlider = (effect) =>{
   });
 };
 
-const applyAnEffect = (id, index) => {
+const applyAnEffect = (id) => {
+  fieldValue.value = null;
   switch(id){
     case 'effect-chrome':
       document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+      fieldValue.value = 0;
       updateSlider(SliderSettings.CHROME);
-      sliderElement.noUiSlider.on('update', () => {
-        const fieldValue = effects[index].querySelector('.effects__radio');
-        fieldValue.value = sliderElement.noUiSlider.get();
+      slider.noUiSlider.on('update', () => {
+        fieldValue.value = slider.noUiSlider.get();
         image.style.filter = `grayscale(${fieldValue.value})`;
       });
       break;
     case 'effect-sepia':
       document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+      fieldValue.value = 0;
       updateSlider(SliderSettings.SEPIA);
-      sliderElement.noUiSlider.on('update', () => {
-        const fieldValue = effects[index].querySelector('.effects__radio');
-        fieldValue.value = sliderElement.noUiSlider.get();
+      slider.noUiSlider.on('update', () => {
+        fieldValue.value = slider.noUiSlider.get();
         image.style.filter = `sepia(${fieldValue.value})`;
       });
       break;
     case 'effect-marvin':
       document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+      fieldValue.value = 0;
       updateSlider(SliderSettings.MARVIN);
-      sliderElement.noUiSlider.on('update', () => {
-        const fieldValue = effects[index].querySelector('.effects__radio');
-        fieldValue.value = sliderElement.noUiSlider.get();
+      slider.noUiSlider.on('update', () => {
+        fieldValue.value = slider.noUiSlider.get();
         image.style.filter = `invert(${fieldValue.value}%)`;
       });
       break;
     case 'effect-heat':
       document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+      fieldValue.value = 0;
       updateSlider(SliderSettings.HEAT);
-      sliderElement.noUiSlider.on('update', () => {
-        const fieldValue = effects[index].querySelector('.effects__radio');
-        fieldValue.value = sliderElement.noUiSlider.get();
+      slider.noUiSlider.on('update', () => {
+        fieldValue.value = slider.noUiSlider.get();
         image.style.filter = `brightness(${fieldValue.value})`;
       });
       break;
     case 'effect-phobos':
       document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+      fieldValue.value = 0;
       updateSlider(SliderSettings.PHOBOS);
-      sliderElement.noUiSlider.on('update', () => {
-        const fieldValue = effects[index].querySelector('.effects__radio');
-        fieldValue.value = sliderElement.noUiSlider.get();
+      slider.noUiSlider.on('update', () => {
+        fieldValue.value = slider.noUiSlider.get();
         image.style.filter = `blur(${fieldValue.value}px)`;
       });
       break;
     case 'effect-none':
       document.querySelector('.img-upload__effect-level').classList.add('hidden');
-      image.style.filter = '';
+      fieldValue.value = 0;
+      image.style.filter = null;
       break;
   }
 };
