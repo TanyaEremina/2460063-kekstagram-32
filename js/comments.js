@@ -1,13 +1,11 @@
-const elementHTML = '<img class="social__picture" src="${avatar}" alt="${name}" width="35" height="35"><p class="social__text">${message}</p>';
-const createCommentList = (value) =>{
+const createElement = (avatar, name, message) => `<img class="social__picture" src="${avatar}" alt="${name}" width="35" height="35"><p class="social__text">${message}</p>`;
+const createCommentList = (arrayComments) =>{
   const newListComments = document.querySelector('.social__comments');
-  value.forEach((item) =>{
+  arrayComments.forEach((comment) =>{
     const commentElement = document.createElement('li');
     commentElement.classList.add('social__comment');
-    commentElement.innerHTML = elementHTML;
-    commentElement.querySelector('.social__picture').src = item.avatar;
-    commentElement.querySelector('.social__picture').alt = item.name;
-    commentElement.querySelector('.social__text').textContent = item.message;
+    const {avatar, name, message} = comment;
+    commentElement.innerHTML = createElement(avatar, name, message);
     newListComments.appendChild(commentElement);
   });
 };
@@ -18,3 +16,5 @@ const deleteCommentList = (listComments) => {
 };
 
 export {createCommentList,deleteCommentList};
+
+

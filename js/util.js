@@ -1,4 +1,5 @@
-const makeCounter = () => {
+import {applyAnEffect} from './effects.js';
+/*const makeCounter = () => {
   let currentCount = 1;
 
   function counter() {
@@ -32,5 +33,17 @@ const getNumberFromArray = (min, max) => {
   }
   const randomElement = array[Math.floor(Math.random() * array.length)];
   return randomElement;
+};*/
+
+const getEffectId = (effects) => {
+  effects.forEach((element, index) => {
+    element.addEventListener('click',(evt) => {
+      const event = evt.currentTarget;
+      const currentId = event.querySelector('input').id;
+      applyAnEffect(currentId, index);
+    });
+  });
 };
-export {getIdPost, getIdComments, getUrlPhotos, getRandomInteger, getElemenyFromArray, getNumberFromArray};
+
+
+export {getEffectId};
